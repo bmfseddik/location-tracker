@@ -1,129 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Location Tracker</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Area Code City Finder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #0f172a;
-            color: #ffffff;
-        }
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: white;
+}
 
-        header {
-            background-color: #020617;
-            padding: 20px;
-            text-align: center;
-            font-size: 26px;
-            font-weight: bold;
-        }
+header {
+    background: #020617;
+    padding: 20px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+}
 
-        main {
-            max-width: 700px;
-            margin: auto;
-            padding: 30px;
-        }
+main {
+    max-width: 600px;
+    margin: auto;
+    padding: 30px;
+}
 
-        button {
-            background-color: #38bdf8;
-            border: none;
-            padding: 15px 20px;
-            font-size: 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
+input {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    margin-top: 10px;
+}
 
-        button:hover {
-            background-color: #0ea5e9;
-        }
+button {
+    margin-top: 15px;
+    padding: 15px;
+    font-size: 16px;
+    background: #38bdf8;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+}
 
-        .card {
-            background-color: #020617;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 10px;
-        }
+button:hover {
+    background: #0ea5e9;
+}
 
-        .warning {
-            color: #facc15;
-            margin-top: 20px;
-            font-size: 14px;
-        }
+.card {
+    background: #020617;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
 
-        a {
-            color: #38bdf8;
-        }
-    </style>
+.warning {
+    color: #facc15;
+    font-size: 14px;
+    margin-top: 15px;
+}
+</style>
 </head>
 
 <body>
 
 <header>
-    📍 Location Tracker (Consent-Based)
+📞 Area Code City Finder
 </header>
 
 <main>
-    <p>
-        This website can show your approximate or GPS location
-        <strong>only if you allow it</strong>.
-    </p>
+<p>Enter a phone <strong>area code</strong> (example: 540)</p>
 
-    <button onclick="getLocation()">Get My Location</button>
+<input type="number" id="codeInput" placeholder="Enter area code">
 
-    <div class="card" id="output">
-        <p>No location data yet.</p>
-    </div>
+<button onclick="lookupCode()">Find Location</button>
 
-    <p class="warning">
-        ⚠ This site does NOT track people by phone number.  
-        Location access requires user permission.
-    </p>
+<div class="card" id="result">
+<p>No data yet.</p>
+</div>
+
+<p class="warning">
+⚠ This tool only checks phone area codes.  
+It does NOT track phone numbers or people.
+</p>
 </main>
 
 <script>
-    function getLocation() {
-        const output = document.getElementById("output");
-
-        if (!navigator.geolocation) {
-            output.innerHTML = "<p>Geolocation is not supported.</p>";
-            return;
-        }
-
-        output.innerHTML = "<p>Requesting location permission...</p>";
-
-        navigator.geolocation.getCurrentPosition(
-            function(position) {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-                const accuracy = position.coords.accuracy;
-
-                output.innerHTML = `
-                    <p><strong>Latitude:</strong> ${latitude}</p>
-                    <p><strong>Longitude:</strong> ${longitude}</p>
-                    <p><strong>Accuracy:</strong> ${accuracy} meters</p>
-                    <p>
-                        <a href="https://www.google.com/maps?q=${latitude},${longitude}" target="_blank">
-                            Open in Google Maps
-                        </a>
-                    </p>
-                `;
-            },
-            function(error) {
-                output.innerHTML = `
-                    <p>Failed to get location.</p>
-                    <p>Error: ${error.message}</p>
-                `;
-            },
-            {
-                enableHighAccuracy: true,
-                timeout: 10000
-            }
-        );
+const areaCodes = {
+    "540": {
+        state: "Virginia",
+        cities: "Roanoke, Fredericksburg, Harrisonburg"
+    },
+    "703": {
+        state: "Virginia",
+        cities: "Arlington, Alexandria, Fairfax"
+    },
+    "212": {
+        state: "New York",
+        cities: "Manhattan"
+    },
+    "213": {
+        state: "California",
+        cities: "Los Angeles"
+    },
+    "305": {
+        state: "Florida",
+        cities: "Miami"
+    },
+    "312": {
+        state: "Illinois",
+        cities: "Chicago"
     }
+};
+
+function lookupCode() {
+    const input = document.getElementById("codeInput").value;
+    const result = document.getElementById("result");
+
+    if (areaCodes[input]) {
+        result.innerHTML = `
+            <p><strong>Area Code:</strong> ${input}</p>
+            <p><strong>State:</strong> ${areaCodes[input].state}</p>
+            <p><strong>Example Cities:</strong> ${areaCodes[input].cities}</p>
+        `;
+    } else {
+        result.innerHTML = `
+            <p>❌ Area code not found.</p>
+            <p>Try another one.</p>
+        `;
+    }
+}
 </script>
 
 </body>
